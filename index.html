@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Virtual Lab - Pentest avec Metasploit</title>
-    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="header">
@@ -167,21 +167,207 @@
       </div>
 
       <div class="section content-section" id="metasploit-install">
-        <h2>🎯 Installation de Metasploit Framework</h2>
-        <div class="highlight-box" style="margin-top: 2rem">
-          <a href="#menu-rapport" class="btn" style="background: #38b4ff">
-            ⬅️ Revenir au menu du rapport
-          </a>
-        </div>
-      </div>
+        <h2>🎯 Présentation du Metasploit Framework</h2>
 
+        <p>
+          Metasploit n’est pas simplement un outil, c’est un véritable framework
+          développé à l’origine par H.D. Moore en 2003. Son objectif était de
+          faciliter le travail des professionnels de la cybersécurité en
+          automatisant les tâches répétitives liées aux tests d’intrusion,
+          notamment la création, l’adaptation et l’exécution d’exploits. Au lieu
+          de repartir de zéro à chaque test, Metasploit permet de gagner un
+          temps précieux en réutilisant des modules préexistants.
+        </p>
+        <p>
+          Le framework, initialement écrit en Perl puis réécrit en Ruby, a connu
+          un grand succès dans la communauté de la cybersécurité. Il a été par
+          la suite acquis par la société Rapid7, spécialisée dans l’analyse de
+          vulnérabilités.
+        </p>
+        <p>
+          Aujourd’hui, Metasploit contient plus de 2 400 modules d’exploits,
+          ainsi que de nombreux modules destinés aux phases pré et
+          post-exploitation. Il permet non seulement de sélectionner des
+          attaques selon le contexte (grâce à une vaste bibliothèque en ligne),
+          mais aussi de créer des scripts personnalisés pour automatiser
+          certaines étapes complexes du pentest.
+        </p>
+        <p>
+          En résumé, Metasploit est un véritable couteau suisse du test
+          d’intrusion, capable d’accompagner un pentesteur du début à la fin de
+          son audit de sécurité.
+        </p>
+        <h2>🎯 Installation de Metasploit Framework</h2>
+        <p>
+          D’après les consignes présentes sur le dépôt GitHub du framework 4, en
+          plus d’avoir installé un logiciel de virtualisation (nous avons retenu
+          VirtualBox), il sera nécessaire d’installer les éléments suivants:
+        </p>
+
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+          <li>Packer 5</li>
+          <li>Vagrant 6</li>
+          <li>Vagrant Reload Plugin 7</li>
+        </ul>
+        <p>
+          Une fois ces éléments installés, nous avons procédé comme suit pour
+          mettre en place notre environnement:
+        </p>
+
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+          <li>Clonage du dépôt</li>
+          <!---->
+          Nous avons téléchargé le contenu complet du projet Metasploitable3 en
+          local à l’aide de l’outil git et de la commande suivante:
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+            git clone https://github.com/rapid7/metasploitable3.git
+            </code></pre>
+          <!--- Figure 1 – Clônage du dépôt GitHub de Metasploit 3 -->
+          <img src="CE/Installation/CE2.png" width="800" />
+          <figcaption>
+            Figure 1 – Clônage du dépôt GitHub de Metasploit 3
+          </figcaption>
+          <!--- Figure 2 – Clônage complet du dépôt GitHub de Metasploit 3-->
+          <img src="CE/Installation/CE3.png" width="800" />
+          <figcaption>
+            Figure 2 – Clônage complet du dépôt GitHub de Metasploit 3
+          </figcaption>
+          <li>Création de sous-dossiers par machine</li>
+          <!---->
+          <p>
+            Dans le répertoire du projet cloné, nous avons créé un dossier dédié
+            à chaque machine virtuelle à installer. Ensuite, nous avons utilisé
+            la commande <strong>vagrant init</strong> pour initialiser la
+            configuration spécifique à chaque machine, puis
+            <strong>vagrant up </strong> pour télécharger l’image
+            correspondante, configurer automatiquement la machine virtuelle et
+            la démarrer dans VirtualBox.
+          </p>
+
+          <li>Installation de Windows Server 2008 dans win2k8;</li>
+          <!---->
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+                PS C:\Users\iDom\metasploitable3> mkdir win2k8
+                PS C:\Users\iDom\metasploitable3> cd win2k8
+                PS C:\Users\iDom\metasploitable3\win2k8> vagrant init
+                ,→ rapid7/metasploitable3-win2k8
+                PS C:\Users\iDom\metasploitable3\win2k8> vagrant up
+              </code></pre>
+          <!--- Figure 3 – 
+              Installation de la machine virtuelle Win 2008-->
+          <img src="CE/Installation/CE4.png" width="700" />
+          <figcaption>
+            Figure 3 – Installation de la machine virtuelle Win 2008
+          </figcaption>
+          <li>Installation de Ubuntu 14.04 dans ubuntu1404;</li>
+          <!---->
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+              PS C:\Users\iDom\metasploitable3> mkdir ubuntu1404
+              PS C:\Users\iDom\metasploitable3> cd ubuntu1404
+              PS C:\Users\iDom\metasploitable3\ubuntu1404> vagrant init
+              ,→ rapid7/metasploitable3-ub1404
+              PS C:\Users\iDom\metasploitable3\ubuntu1404> vagrant up
+              </code></pre>
+          <!--Installation de la machine virtuelle Ubuntu14.04-->
+          <img src="CE/Installation/CE7.png" width="700" />
+          <figcaption>
+            Figure 6 – Installation de la machine virtuelle Ubuntu14.04
+          </figcaption>
+          <li>Installation de Kali Linux.</li>
+          <!---->
+          <p>
+            Nous avons simplement télécharger son image depuis le site officiel,
+            puis installer celle-ci, comme on le voit sur les captures d'écrans
+            ci-dessous.
+          </p>
+          <img src="CE/Installation/CE11.png" width="700" />
+          <figcaption>
+            Figure 7 – Téléchargement de l'image de Kali Linux
+          </figcaption>
+          <img src="CE/Installation/CE12.png" width="700" />
+          <figcaption>
+            Figure 8 – Installation de la machine virtuelle Kali Linux
+          </figcaption>
+        </ul>
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
+      </div>
+      <!---->
+      <div class="section content-section" id="config-reseau-detail">
+        <h2>⚙️ Configuration réseau des machines virtuelles cibles</h2>
+
+        <h2>⚙️ Configuration réseau de la machine virtuelle attaquante</h2>
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
+      </div>
+      <!---->
+      <div class="section content-section" id="pfsense-detail">
+        <h2>🛡️ Organisation du réseau avec Pare-feu et routeur open source</h2>
+
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
+      </div>
+      <!---->
       <div class="section content-section" id="nmap-scan">
         <h2>🔍 Nmap : Scan et énumération</h2>
-        <div class="highlight-box" style="margin-top: 2rem">
-          <a href="#menu-rapport" class="btn" style="background: #38b4ff">
-            ⬅️ Revenir au menu du rapport
-          </a>
-        </div>
+
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
+      </div>
+      <!---->
+      <div class="section content-section" id="meterpreter-payload">
+        <h2>💻 Meterpreter : Payload avancé</h2>
+
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
+      </div>
+      <!---->
+      <div class="section content-section" id="john-the-ripper">
+        <h2>🔓 John the Ripper : Craquage de mots de passe</h2>
+
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
+      </div>
+      <!---->
+      <div class="section content-section" id="proxychains-pivoting">
+        <h2>🌐 Proxychains : Routage et Pivoting</h2>
+
+        <a href="#menu-rapport" class="btn" style="background: #38b4ff">
+          ⬅️ Revenir au menu du rapport
+        </a>
       </div>
 
       <div class="section">
@@ -260,3 +446,4 @@
     </script>
   </body>
 </html>
+
