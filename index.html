@@ -322,9 +322,235 @@
       </div>
       <!---->
       <div class="section content-section" id="config-reseau-detail">
-        <h2>⚙️ Configuration réseau des machines virtuelles cibles</h2>
+        <h2>⚙️ Configuration réseau de l'environnement virtuel</h2>
+        <!----->
+        <p>
+          Dans cette section, nous allons présenter les différentes étapes qui
+          nous ont permis de mettre en place un réseau local entre les machines
+          virtuelles Ubuntu 14.04 et Windows 2008, ainsi qu’une connexion
+          internet entre les machines Windows 2008 et Kali Linux.
+        </p>
+        <p>
+          On utilisera le routeur gratuit Pfsense pour réaliser notre
+          configuration réseau.
+        </p>
+        <h2>
+          ⚙️ Configuration du réseau privé et du réseau interne dans Virtualbox
+        </h2>
+        <!---->
+        <p>
+          Notre objectif est de mettre en place deux réseaux virtuels distincts
+          dans VirtualBox afin de simuler un scénario de segmentation réseau :
+        </p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+          <li>
+            <strong> Un réseau Réseau privé hôte</strong> (VirtualBox Host-Only
+            Ethernet Adapter) pour les communications entre l’hôte physique et
+            certaines machines virtuelles (Kali Linux, Windows Server 2008,
+            pfSense).
+          </li>
+          <li>
+            <strong> Un réseau Réseau interne</strong> (intnet) permettant la
+            communication isolée entre Windows Server 2008 et Ubuntu 14.04, via
+            pfSense.
+          </li>
+        </ul>
+        <!---->
+        <p>
+          Dans VirtualBox, l’outil Network Manager (menu Fichier > Gestionnaire
+          de réseau) permet de visualiser les réseaux Host-only. On constate ici
+          deux réseaux définis :
+        </p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+          <li>
+            VirtualBox Host-Only Ethernet Adapter avec une adresse IPv4
+            10.10.10.128/24 et le serveur DHCP désactivé.
+          </li>
+          <li>
+            VirtualBox Host-Only Ethernet Adapter #2 avec une adresse IPv4
+            192.168.12.1/24 et le serveur DHCP désactivé.
+          </li>
+        </ul>
+        <p>
+          Ce laboratoire utilisera le premier réseau (10.10.10.128/24) pour
+          relier la machine attaquante, la machine pivot et pfSense sur son
+          interface LAN.
+        </p>
+        <!--CE1-->
+        <img src="CE/config_mach_cibles/CE1.png" width="500" />
+        <figcaption>
+          Figure 9 – Configuration Host-only dans VirtualBox
+        </figcaption>
 
-        <h2>⚙️ Configuration réseau de la machine virtuelle attaquante</h2>
+        <!--CE2-->
+        <img src="CE/config_mach_cibles/CE2.png" width="500" />
+        <figcaption>
+          Figure 10 – Adresse manuelle du réseau privé hôte
+        </figcaption>
+        <!---->
+        <h2>⚙️ Configuration réseau des machines cibles</h2>
+        <h3>Windows Server: Le Pivot</h3>
+        <p>
+          La machine pivot Windows Server 2008 est présente à la fois sur le
+          réseau interne intnet (Adaptateur 2), dédié à la communication avec la
+          machine Ubuntu 14.04, et sur le réseau relié à Internet Réseau privé
+          hôte (Adaptateur 1 :VirtualBox Host-Only Ethernet Adapter) , utilisé
+          pour la communication avec Kali Linux et pfSense (IP dans le
+          sous-réseau 10.10.10.0/24).
+        </p>
+        <!--CE-->
+        <p>La configuration réseau de la machine virtuelle Windows Server
+           2008 a été réalisée en accédant au Centre Réseau et Partage depuis le menu Démarrer, puis en modifiant les paramètres IPv4 de
+           chaque adaptateur réseau.</p>
+        <p>Les adresses attribuées sont les suivantes :
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+            <li>Adaptateur LAN : 10.10.10.2/24 (passerelle 10.10.10.128)</li>
+            <li>Adaptateur WAN : 192.168.100.2/24</li>
+            <li>LAN : 10.10.10.2</li>
+            <li>WAN : 192.168.100.2</li>
+          </ul>
+        </p>
+        <!--CE3-->
+        <img src="CE/config_mach_cibles/CE3.png" width="500" />
+        <figcaption>
+          Figure 11 – Centre Réseau et Partage sous Windows Server 2008
+        </figcaption>
+        <!--CE4-->
+        <img src="CE/config_mach_cibles/CE4.png" width="500" />
+        <figcaption>
+          Figure 12 – Propriétés de la connexion réseau - Adaptateur 1 (Réseau privé hôte)
+        </figcaption>
+        <!--CE5-->
+        <img src="CE/config_mach_cibles/CE5.png" width="500" />
+        <figcaption>
+          Figure 13 – Configuration IPv4 – Adaptateur 1 (10.10.10.2/24, passerelle 10.10.10.128)
+        </figcaption>
+        <!--CE6-->
+        <img src="CE/config_mach_cibles/CE6.png" width="300" />
+        <figcaption>
+          Figure 14 – Statut de la connexion — Adaptateur 1
+        </figcaption>
+        <!--CE7-->
+        <img src="CE/config_mach_cibles/CE7.png" width="300" />
+        <figcaption>
+          Figure 15 – Propriétés de la connexion réseau — Adaptateur 2 (Réseau interne)
+        </figcaption>
+        <!--CE8-->
+        <img src="CE/config_mach_cibles/CE8.png" width="300" />
+        <figcaption>
+          Figure 15 – Configuration IPv4 — Adaptateur 2 (192.168.100.2/24)
+        </figcaption>
+        <!--CE9-->
+        <img src="CE/config_mach_cibles/CE9.png" width="300" />
+        <figcaption>
+          Figure 16 – Adaptateur réseau interne sur Ubuntu 14.04
+        </figcaption>
+        <!--CE10-->
+        <img src="CE/config_mach_cibles/CE10.png" width="300" />
+        <figcaption>
+          Figure 16 – Adaptateur réseau interne sur Ubuntu 14.04
+        </figcaption>
+        <h3>Ubuntu 14.04 (machine cible interne)</h3>
+        <p>
+          La machine Ubuntu 14.04 est connectée uniquement au réseau interne, 
+          intnet (Adaptateur 1 : Réseau interne), pour échanger exclusivement 
+          avec Windows Server 2008.
+        </p>
+        <!--CE11-->
+        <img src="CE/config_mach_cibles/CE11.png" width="500" />
+        <figcaption>
+          Figure 16 – Adaptateur réseau interne sur Ubuntu 14.04
+        </figcaption>
+        <p>
+          La configuration réseau de la machine Ubuntu 14.04 a été effectuée uniquement pour l’adaptateur
+          réseau interne (intnet), destiné à communiquer avec Windows Server 2008 via l’adresse IP
+          192.168.100.3/24.
+        </p>
+        <p>
+          Pour réaliser ce paramétrage, nous avons modifié le fichier de configuration des interfaces réseau
+          en exécutant la commande suivante dans le terminal :
+        </p>
+        <!---->
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+                sudo nano /etc/network/interfaces
+              </code></pre>
+        <!--Code-->
+        Le contenu du fichier /etc/network/interfaces a été défini comme suit :
+        <!---->
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+                # The loopback network interface
+                auto lo
+                iface lo inet loopback
+                # The primary network interface
+                auto eth0
+                iface eth0 inet static
+                address 192.168.100.3
+                netmask 255.255.255.0
+              </code></pre>
+        <!--CE12-->
+        <img src="CE/config_mach_cibles/CE12.png" width="500" />
+        <figcaption>
+          Figure 17 – Connexion à la machine Ubuntu 14.04 et ouverture du fichier /etc/network/interfaces
+        </figcaption>
+        <!--CE13-->
+        <img src="CE/config_mach_cibles/CE13.png" width="500" />
+        <figcaption>
+          Figure 18 – Configuration IPv4 statique dans /etc/network/interfaces (192.168.100.3/24)
+        </figcaption>
+        <h2>⚙️ Configuration réseau de la machine attaquante</h2>
+        <h3></h3>
+        <p>
+          La machine attaquante Kali Linux est reliée exclusivement au Réseau privé hôte (Adaptateur
+          1 : VirtualBox Host-Only Ethernet Adapter), pour communiquer avec Windows Server 2008
+          et pfSense (IP dans le sous-réseau 10.10.10.0/24).
+        </p>
+        <!--CODE-->
+        <!---->
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+                sudo ip addr add 10.10.10.100/24 dev eth0
+              </code></pre>
+        <p>
+          Le paramétrage de l’adresse IP a été effectué directement depuis le terminal à l’aide de la
+          commande :
+        </p>
+        
+        <!--CE14-->
+        <img src="CE/config_mach_cibles/CE14.png" width="500" />
+        <figcaption>
+          Figure 19 – Interface réseau privée hôte sur Kali Linux
+        </figcaption>
+
+        <p>
+          Cette configuration permet à Kali Linux de disposer d’une adresse fixe 10.10.10.100/24 sur
+          son interface eth0, utilisée pour initier les attaques vers la machine pivot Windows Server 2008.
+        </p>
         <a href="#menu-rapport" class="btn" style="background: #38b4ff">
           ⬅️ Revenir au menu du rapport
         </a>
@@ -446,4 +672,3 @@
     </script>
   </body>
 </html>
-
