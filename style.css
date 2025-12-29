@@ -1,3 +1,8 @@
+
+a:link {
+  color: #1a73e8; /* Custom blue color */
+}   
+
 p {
   margin-top: 1rem;
   line-height: 1.6;
@@ -388,7 +393,7 @@ body {
 /* Masque TOUS les blocs de contenu détaillés par défaut */
 .content-section {
   /* IMPORTANT: Cache le bloc initialement */
-  display: none; 
+  display: none;
   opacity: 0;
   transition: opacity 0.5s ease;
   margin-top: 2rem;
@@ -408,5 +413,4 @@ body {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 30px; /* Ajustez cette valeur si votre header est plus grand */
-
 }
