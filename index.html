@@ -558,6 +558,198 @@
       <!---->
       <div class="section content-section" id="pfsense-detail">
         <h2>🛡️ Organisation du réseau avec Pare-feu et routeur open source</h2>
+        <!---->
+         <!----->
+        <p>
+          Le pare-feu <strong>pfSense</strong> a été développé sous le système d'exploitation FreeBSD par Chris Buechler et Scott Ullrich. 
+          Il s'agit d'une solution de sécurité entièrement gratuite et qui d'après le <a href="https://www.pfsense.org/getting-started/">site officiel</a>, 
+          a démontré sa robustesse face à de nombreuses solutions commerciales.
+        </p>
+        <p>
+          On utilisera donc <strongp>PfSense</strong> comme routeur pour réaliser notre configuration réseau.
+        </p>
+        <!---->
+        <h2>⚙️ Installation et configuration de pfSense></h2>
+        Nous utilisons <strong>pfSense</strong> en mode ligne de commande, l’interface graphique 
+        étant difficilement exploitable depuis <strong>Windows Server 2008 R2 Standard</strong>.
+        <!---->
+        <!---->
+        <h3>Téléchargement et installation</h3>
+        <p>Nous commençons par télécharger l'ISO d'installation depuis le <a href="https://www.pfsense.org/getting-started/">site officiel</a></p>
+        <!--CE1-->
+        <img src="CE/pfSense/CE1.png" width="500" />
+        <figcaption>
+          Figure 21 – Téléchargement de pfSense depuis le site officiel
+        </figcaption>
+        <p>Après extraction des fichiers téléchargés, nous créons une nouvelle machine virtuelle dans VirtualBox.
+          Nous sélectionnons le type BSD, sous-type FreeBSD (64-bit), et attachons l’image ISO comme disque
+          d’amorçage.
+        </p>
+        <!--CE2-->
+        <img src="CE/pfSense/CE2.png" width="500" />
+        <figcaption>
+          Figure 22 – Création de la machine virtuelle pfSense dans VirtualBox
+        </figcaption>
+        <!---->
+         <p>Lors du premier démarrage, l’installateur Netgate se lance. 
+          Nous acceptons les conditions de licence.
+        </p>
+        <!--CE3-->
+        <img src="CE/pfSense/CE3.png" width="500" />
+        <figcaption>
+          Figure 23 – Chargement de l’image ISO et lancement de l’installation
+        </figcaption>
+        <!---->
+        <p>Une fois l’installation terminée, nous retirons l’ISO et redémarrons la machine virtuelle. 
+          pfSense affiche alors son menu principal en console.
+        </p>
+        <!--CE4-->
+        <img src="CE/pfSense/CE4.png" width="500" />
+        <figcaption>
+          Figure 24 – Menu principal de configuration console pfSense
+        </figcaption>
+        <!---->
+        <!---->
+        <h3>Paramétrage de l’interface WAN</h3>
+        <!---->
+        <p>Nous accédons au menu console et choisissons l’option 2: <strong>Set interface(s) IP address</strong>, puis
+sélectionnons <strong>WAN (em0)</strong>. Nous désactivons le DHCP (n) et configurons l’adresse IPv4 statique
+192.168.148.128/24 avec comme passerelle 192.168.148.2, définie comme passerelle par défaut (y).
+
+        </p>
+        <!--CE5-->
+        <img src="CE/pfSense/CE5.png" width="500" />
+        <figcaption>
+          Figure 25 –  Configuration IPv4 statique sur l’interface WAN
+        </figcaption>
+        <!---->
+        <p>Après validation, pfSense applique la configuration et confirme que l’adresse IPv4 du WAN est bien
+            définie sur 192.168.148.128/24
+        </p>
+        <!--CE6-->
+        <img src="CE/pfSense/CE6.png" width="500" />
+        <figcaption>
+          Figure 26 – Confirmation de l’adresse IPv4 sur l’interface WAN
+        </figcaption>
+        <!---->
+        <!---->
+        <h3>Paramétrage de l’interface LAN</h3>
+        <p>Nous procédons ensuite à la configuration de l’interface <strong>LAN (em1)</strong> depuis le même menu console.
+          Nous choisissons de ne pas utiliser le DHCP (n) pour l’adresse IPv4 et attribuons l’adresse statique
+          10.10.10.128/24. La passerelle IPv4 reste 10.10.10.128 et nous la définissons comme passerelle par
+          défaut (y).
+        </p>
+        <!--CE5-->
+        <img src="CE/pfSense/CE7.png" width="500" />
+        <figcaption>
+          Figure 27 – Sélection de l’interface LAN dans pfSense
+        </figcaption>
+        <!---->
+        <p>Nous désactivons IPv6 (n) puis activons le serveur DHCP sur le LAN (y) avec une plage d’adresses
+           allant de 10.10.10.100 à 10.10.10.200. Après validation, pfSense applique la configuration et confirme que l’adresse IPv4 du LAN est bien
+           définie sur 10.10.10.128/24.
+        </p>
+        <!--CE6-->
+        <img src="CE/pfSense/CE8.png" width="500" />
+        <figcaption>
+          Figure 28 – Configuration IPv4 statique et DHCP sur le LAN et Confirmation de l’adresse IPv4 sur l’interface LAN
+        </figcaption>
+        <!---->
+
+        <!---->
+        <h2>⚙️ Définition des règles personnalisées en ligne de commande</h2>
+        <p>Les règles que nous avons mises en place pour le routeur pfSense sont inspirées 
+          de celles proposées par Dustin Noe dans son article sur <a href="https://medium.com/@noe.dustin/advanced-pentesting-lab-with-vmware-vyos-kali-and-metasploitable3-3d0c07419e49">VyOS 11</a>.</p>
+          
+        <p>Lors du paramétrage des interfaces réseau de <strong>pfSense</strong>, nous avons défini:
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+            <li>L’interface WAN avec l’adresse IP 192.168.148.2/24</li>
+            <li>L’interface LAN avec l’adresse IP 10.10.10.128/24</li>
+          </ul>
+          Les machines <strong>Windows Server 2008</strong> et <strong>Ubuntu 14.04</strong> sont toutes deux connectées derrière le
+          pare-feu pfSense, sur le réseau LAN.</p>
+        <!---->
+        <!---->
+        <h3>Filtrage du trafic entrant</h3>
+        <!---->
+        <p>Pour le trafic entrant, le pare-feu autorise: 
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+            <li>Le <strong>trafic établi et associé</strong>, c’est-à-dire les connexions déjà initiées ou attendues (via les
+            protocoles TCP et UDP)</li>
+            <li>Le trafic <strong>entrant spécifique:</strong> une connexion TCP provenant de n’importe quelle adresse à
+            destination de 10.10.10.128 sur le port 8585</li>
+          </ul>
+          En revanche, <strong>tout autre trafic entrant est bloqué</strong>, de manière à forcer tout
+          passage par le routeur, qui joue alors pleinement son rôle de point de contrôle central du réseau.
+        </p>
+        <!---->
+        <!---->
+        <h3>Filtrage du trafic sortant</h3>
+        <!---->
+        <p>Pour le trafic sortant, le pare-feu autorise: 
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+            <li>Le <strong>trafic établi et associé</strong>, via les protocoles TCP et UDP</li>
+            <li>Le trafic <strong>TCP sortant</strong> vers le port 443, c'est à dire les connexions <strong>HTTPS</strong></li>
+          </ul>
+          <strong>Tout autre trafic sortant est bloqué</strong>, afin de limiter les flux non contrôlé
+          sortant du réseau LAN
+        </p>
+        <!--CE-->
+        <!--CE8-->
+        <img src="CE/pfSense/CE9.png" width="500" />
+        <figcaption>
+          Figure 30 – Configuration des règles de trafic entrant et sortant sur la machine pfSense
+        </figcaption>
+        <!---->
+        <!---->
+        <!---->
+        <p>Ces règles de pare-feu permettent de: 
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+            <li>Protéger les machines internes contre des connexions non sollicitées;</li>
+            <li><strong>Filtrer précisément les flux de sortie</strong>;</li>
+            <li><strong>Contrôler tout le trafic</strong> via une seule passerelle (pfSense), notamment dans un scénario de
+              pentest en environnement segmenté.</li>
+          </ul>
+          Il est possible d’ajouter manuellement des règles dans le fichier <strong>/etc/pf.conf</strong>.
+          Après avoir écrit ou modifié ce fichier, on recharge les règles avec:
+        </p>
+        <!--Code-->
+        <!--CODE-->
+        <!---->
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css"
+          />
+          <link
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+            rel="stylesheet"
+          />
+          <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+          <pre><code class="language-bash">
+                pfctl -f /etc/pf.conf
+              </code></pre>
+        <!--CE-->
+        <!--CE9-->
+        <img src="CE/pfSense/CE10.png" width="500" />
+        <figcaption>
+          Figure 31 – Chargement des nouvelles règles de trafic entrant et sortant sur la machine pfSense
+        </figcaption>
+        
+        <!---->
+        <!---->
+        <!---->
+        <p>Les règles définies dans <strong>/etc/pf.conf</strong> ne sont pas celles utilisées par pfSense En
+          effet, avec pfSense, les règles configurées via l’interface web ne sont pas stockées dans <strong>/etc/pf.conf</strong>.
+          Elles sont en réalité générées dynamiquement à partir du fichier <strong>/conf/config.xml</strong>, et chargées
+          automatiquement via les outils internes de pfSense. Cela signifie que: 
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+            <li>Le fichier <strong>/etc/pf.conf</strong> est vide ou minimal par défaut;</li>
+            <li>Les règles actuellement actives (affichées par pfctl -sr) ne proviennent pas de <strong>pf.conf</strong>;</li>
+            <li>Si l’on charge un fichier <strong>pf.conf</strong> avec <strong>pfctl -f</strong>, cela remplace les règles dynamiques en mémoire;</li>
+            <li><strong>Ce changement n’est pas persistant: au redémarrage, pfSense réinitialise les règles à partir de sa
+              configuration interne.</strong></li>
+          </ul>
+        </p>
 
         <a href="#menu-rapport" class="btn" style="background: #38b4ff">
           ⬅️ Revenir au menu du rapport
