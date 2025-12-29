@@ -389,7 +389,7 @@
         </figcaption>
         <!---->
         <h2>⚙️ Configuration réseau des machines cibles</h2>
-        <h3>Windows Server 2008 : Le Pivot</h3>
+        <h3>Windows Server 2008: Le Pivot</h3>
         <p>
           La machine pivot Windows Server 2008 est présente à la fois sur le
           réseau interne intnet (Adaptateur 2), dédié à la communication avec la
@@ -406,8 +406,8 @@
           <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
             <li>Adaptateur LAN : 10.10.10.2/24 (passerelle 10.10.10.128)</li>
             <li>Adaptateur WAN : 192.168.100.2/24</li>
-            <li>LAN : 10.10.10.2</li>
-            <li>WAN : 192.168.100.2</li>
+            <li>LAN: 10.10.10.2</li>
+            <li>WAN: 192.168.100.2</li>
           </ul>
         </p>
         <!--CE3-->
@@ -484,7 +484,7 @@
                 sudo nano /etc/network/interfaces
               </code></pre>
         <!--Code-->
-        Le contenu du fichier /etc/network/interfaces a été défini comme suit :
+        Le contenu du fichier /etc/network/interfaces a été défini comme suit:
         <!---->
           <link
             rel="stylesheet"
@@ -538,7 +538,7 @@
               </code></pre>
         <p>
           Le paramétrage de l’adresse IP a été effectué directement depuis le terminal à l’aide de la
-          commande :
+          commande:
         </p>
         
         <!--CE14-->
@@ -566,10 +566,10 @@
           a démontré sa robustesse face à de nombreuses solutions commerciales.
         </p>
         <p>
-          On utilisera donc <strongp>PfSense</strong> comme routeur pour réaliser notre configuration réseau.
+          On utilisera donc <strongp>pfSense</strong> comme routeur pour réaliser notre configuration réseau.
         </p>
         <!---->
-        <h2>⚙️ Installation et configuration de pfSense></h2>
+        <h2>⚙️ Installation et configuration de pfSense</h2>
         Nous utilisons <strong>pfSense</strong> en mode ligne de commande, l’interface graphique 
         étant difficilement exploitable depuis <strong>Windows Server 2008 R2 Standard</strong>.
         <!---->
@@ -613,8 +613,8 @@
         <h3>Paramétrage de l’interface WAN</h3>
         <!---->
         <p>Nous accédons au menu console et choisissons l’option 2: <strong>Set interface(s) IP address</strong>, puis
-sélectionnons <strong>WAN (em0)</strong>. Nous désactivons le DHCP (n) et configurons l’adresse IPv4 statique
-192.168.148.128/24 avec comme passerelle 192.168.148.2, définie comme passerelle par défaut (y).
+          sélectionnons <strong>WAN (em0)</strong>. Nous désactivons le DHCP (n) et configurons l’adresse IPv4 statique
+          192.168.148.128/24 avec comme passerelle 192.168.148.2, définie comme passerelle par défaut (y).
 
         </p>
         <!--CE5-->
@@ -864,5 +864,6 @@ sélectionnons <strong>WAN (em0)</strong>. Nous désactivons le DHCP (n) et conf
     </script>
   </body>
 </html>
+
 
 
